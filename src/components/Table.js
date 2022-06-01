@@ -1,12 +1,12 @@
 import React from "react";
 
-import { useState, useEffect } from "react";
+import { useContext } from "react";
 import MUIDataTable from "mui-datatables";
-import axios from "axios";
 import { createTheme, ThemeProvider } from "@material-ui/core/styles";
 import { CacheProvider } from "@emotion/react";
 import createCache from "@emotion/cache";
 import CustomInput from "./CustomInput";
+import { GlobalContext } from "../Contexts/GlobalContext";
 
 const muiCache = createCache({
   key: "mui",
@@ -14,10 +14,7 @@ const muiCache = createCache({
 });
 
 export const Table = () => {
-  const [products, setProducts] = useState([]);
-
-  const { REACT_APP_API_URL } = process.env;
-  const endpoint = REACT_APP_API_URL;
+  const { products } = useContext(GlobalContext);
 
   const getMuiTheme = () =>
     createTheme({
@@ -31,17 +28,6 @@ export const Table = () => {
         },
       },
     });
-
-  const getData = async () => {
-    await axios.get(endpoint).then((response) => {
-      const data = response.data.data;
-      setProducts(data);
-    });
-  };
-
-  useEffect(() => {
-    getData();
-  }, []);
 
   const columns = [
     {
