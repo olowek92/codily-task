@@ -6,6 +6,7 @@ import axios from "axios";
 import { createTheme, ThemeProvider } from "@material-ui/core/styles";
 import { CacheProvider } from "@emotion/react";
 import createCache from "@emotion/cache";
+import CustomInput from "./CustomInput";
 
 const muiCache = createCache({
   key: "mui",
@@ -15,7 +16,8 @@ const muiCache = createCache({
 export const Table = () => {
   const [products, setProducts] = useState([]);
 
-  const endpoint = "https://reqres.in/api/products";
+  const { REACT_APP_API_URL } = process.env;
+  const endpoint = REACT_APP_API_URL;
 
   const getMuiTheme = () =>
     createTheme({
@@ -79,16 +81,21 @@ export const Table = () => {
     rowsPerPage: 5,
     responsive: "standard",
     selectableRowsHideCheckboxes: true,
-    searchProps: {
-      onFocus: (e) => {
-        e.target.type = "number";
-      },
-    },
     setRowProps: (row) => {
-      const test = row[3];
+      const rowColor = row[3];
       return {
-        style: { background: test },
+        style: { background: rowColor },
       };
+    },
+    customSearchRender: (searchText, handleSearch, hideSearch, options) => {
+      return (
+        <CustomInput
+          searchText={searchText}
+          onSearch={handleSearch}
+          onHide={hideSearch}
+          options={options}
+        />
+      );
     },
   };
 
